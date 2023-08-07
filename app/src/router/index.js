@@ -18,6 +18,7 @@ export default new VueRouter({
             name:"home",
             path:"/home",
             component:Home,
+            // 控制Footer组件的显示和隐藏
             meta:{show:true}
         },
         {

@@ -12,6 +12,15 @@ import router from "@/router";
 // 引入store
 import store from '@/store';
 
+//引入Swiper样式
+import 'swiper/swiper-bundle.min.css';
+
+
+
+
+// 引入mock
+import "@/mock/mockServe";
+
 // 测试
 // import {reqCategoryList} from '@/api'
 // console.log("xxxxxx",reqCategoryList());

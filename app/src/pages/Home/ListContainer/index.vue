@@ -4,24 +4,18 @@
     <div class="sortList clearfix">
       <div class="center">
         <!--banner轮播-->
-        <div class="swiper-container" id="mySwiper">
+        <div class="swiper-container" ref="mySwiper">
           <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <img src="./images/banner1.jpg" />
+            <div
+              class="swiper-slide"
+              v-for="(carousel, index) in bannerList"
+              :key="carousel.id"
+            >
+              <img :src="carousel.imgUrl" />
             </div>
-            <!-- <div class="swiper-slide">
-              <img src="./images/banner2.jpg" />
-            </div>
-            <div class="swiper-slide">
-              <img src="./images/banner3.jpg" />
-            </div>
-            <div class="swiper-slide">
-              <img src="./images/banner4.jpg" />
-            </div> -->
           </div>
           <!-- 如果需要分页器 -->
           <div class="swiper-pagination"></div>
-
           <!-- 如果需要导航按钮 -->
           <div class="swiper-button-prev"></div>
           <div class="swiper-button-next"></div>
@@ -101,8 +95,47 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+// 引入swiper
+import Swiper from 'swiper/bundle';
 export default {
   name: "ListContainer",
+  mounted() {
+    // 派发action
+    this.$store.dispatch("getBannerList");
+  },
+  computed: {
+    ...mapState({
+      bannerList: (state) => state.home.bannerList,
+    }),
+  },
+  watch: {
+    bannerList(newValue, oldValue) {
+      //this.$nextTick()使用
+      this.$nextTick(() => {
+        let mySwiper = new Swiper(
+          this.$refs.mySwiper,
+          {
+            loop: true, // 循环模式选项
+            pagination: {
+              el: ".swiper-pagination",
+              clickable: true,
+            },
+            // 如果需要前进后退按钮
+            navigation: {
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
+            },
+            // 如果需要滚动条
+            scrollbar: {
+              el: ".swiper-scrollbar",
+            },
+          }
+        );
+        console.log(mySwiper);
+      });
+    },
+  },
 };
 </script>
 
