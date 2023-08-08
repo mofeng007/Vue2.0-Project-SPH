@@ -23,12 +23,12 @@ export default new VueRouter({
         },
         {
             name:"search",
-            path:"/search/:keyWord?",
+            path:"/search/:keyword?",
             component:Search,
             meta:{show:true},
             props:($route) =>{
                     return {
-                        keyWord: $route.params.keyWord,
+                        keyword: $route.params.keyword,
                         k: $route.query.k,
                     }
                 }
