@@ -39,7 +39,11 @@
             class="input-error input-xxlarge"
             v-model="keyword"
           />
-          <button class="sui-btn btn-xlarge btn-danger" type="button" @click="goSearch">
+          <button
+            class="sui-btn btn-xlarge btn-danger"
+            type="button"
+            @click="goSearch"
+          >
             搜索
           </button>
         </form>
@@ -53,8 +57,8 @@ export default {
   name: "Header",
   data() {
     return {
-      keyword:'',
-    }
+      keyword: "",
+    };
   },
   methods: {
     goSearch() {
@@ -63,19 +67,30 @@ export default {
       // 模板字符串
       // this.$router.push(`search/${this.keyWord}?k=${this.keyWord.toUpperCase()}`);
       // 对象写法
-      
-      if(this.$route.query){
+
+      if (this.$route.query) {
         let location = {
-          name:"search",
-          params:{
-            keyword:this.keyword || undefined
-          }
+          name: "search",
+          params: {
+            keyword: this.keyword || undefined,
+          },
         };
-        location.query=this.$route.query;
-        this.$router.push(location,()=>{},(err)=>{});
+        location.query = this.$route.query;
+        this.$router.push(
+          location,
+          () => {},
+          (err) => {}
+        );
       }
-    }
-}
+    },
+  },
+  mounted() {
+    // 挂载全局事件总线
+    // 清空搜索框
+    this.$bus.$on("clearSearch", () => {
+      this.keyword = "";
+    });
+  },
 };
 </script>
 

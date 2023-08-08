@@ -11,15 +11,33 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
+            <!-- 分类的面包屑 -->
             <li class="with-x" v-if="searchParams.categoryName">
               {{ searchParams.categoryName
-              }}<i @click="removecategoryName">x</i>
+              }}<i @click="removeCategoryName">x</i>
+            </li>
+            <!-- 关键字的面包屑 -->
+            <li class="with-x" v-if="searchParams.keyword">
+              {{ searchParams.keyword }}<i @click="removeKeyword">x</i>
+            </li>
+            <!-- 品牌的面包屑 -->
+            <li class="with-x" v-if="searchParams.trademark">
+              {{ searchParams.trademark.split(":")[1]
+              }}<i @click="removeTrademark">x</i>
+            </li>
+            <!-- 平台售卖属性的面包屑 -->
+            <li
+              class="with-x"
+              v-for="(attrValue, index) in searchParams.props"
+              :key="index"
+            >
+              {{ attrValue.split(":")[1] }}<i @click="removeAttr(index)">x</i>
             </li>
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector />
+        <SearchSelector @trademarkInfo="trademarkInfo" @attrInfo="attrInfo" />
 
         <!--details-->
         <div class="details clearfix">
@@ -181,8 +199,8 @@ export default {
       // search组件数据
       this.$store.dispatch("getSearchList", this.searchParams);
     },
-    // 删除面包屑
-    removecategoryName() {
+    // 删除分类面包屑
+    removeCategoryName() {
       // 服务器参数说明中说了可有可无，所以可以设置为undefined，就不会带参数给服务器，空串依旧会带给服务器
       this.searchParams.categoryName = undefined;
       this.searchParams.category1Id = undefined;
@@ -191,9 +209,56 @@ export default {
       this.getData();
       // 地址栏也要更改，路由跳转,如果带有params参数，则参数保留
       if (this.$route.params) {
-        this.$router.push({ name: "search", params: this.$route.params });
+        this.$router.push(
+          { name: "search", params: this.$route.params },
+          () => {},
+          (err) => {}
+        );
       }
     },
+    // 删除关键字面包屑
+    removeKeyword() {
+      this.searchParams.keyword = undefined;
+      this.getData();
+      // 清空搜索框
+      this.$bus.$emit("clearSearch");
+      // 地址栏也要更改，路由跳转,如果带有query参数，则参数保留
+      if (this.$route.query) {
+        this.$router.push(
+          { name: "search", query: this.$route.query },
+          () => {},
+          (err) => {}
+        );
+      }
+    },
+    // 品牌自定义事件的回调
+    trademarkInfo(trademark) {
+      // 整理品牌字段参数 id 名称
+      this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`;
+      this.getData();
+    },
+    // 删除品牌面包屑
+    removeTrademark() {
+      this.searchParams.trademark = undefined;
+      this.getData();
+    },
+    // 属性自定义事件回调
+    attrInfo(attr, attrValue) {
+      // 整理属性数组
+      let props = `${attr.attrId}:${attrValue}:${attr.attrName}`;
+      // 数组去重
+      if (this.searchParams.props.indexOf(props) == -1) {
+        this.searchParams.props.push(props);
+      }
+      // 再次发请求
+      this.getData();
+    },
+    // 删除售卖属性面包屑
+    removeAttr(index){
+      // 再次整理参数
+      this.searchParams.props.splice(index, 1);
+      this.getData();
+    }
   },
   watch: {
     // 数据监听，监听路由变化，重新发送请求
@@ -205,6 +270,10 @@ export default {
       this.searchParams.category2Id = undefined;
       this.searchParams.category3Id = undefined;
     },
+  },
+  // 解绑自定义事件
+  beforeDestroy() {
+    this.$off("trademarkInfo");
   },
 };
 </script>
