@@ -43,24 +43,25 @@
         <div class="details clearfix">
           <div class="sui-navbar">
             <div class="navbar-inner filter">
+              <!-- 排序的结构 -->
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{ active: isOne }" @click="changeOrder('1')">
+                  <a
+                    >综合<span
+                      v-show="isOne"
+                      class="iconfont"
+                      :class="{ 'icon-up': isAsc, 'icon-down': isDesc }"
+                    ></span
+                  ></a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{ active: isTwo }" @click="changeOrder('2')">
+                  <a
+                    >价格<span
+                      v-show="isTwo"
+                      class="iconfont"
+                      :class="{ 'icon-up': isAsc, 'icon-down': isDesc }"
+                    ></span
+                  ></a>
                 </li>
               </ul>
             </div>
@@ -75,9 +76,7 @@
               >
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank"
-                      ><img :src="good.defaultImg"
-                    /></a>
+                    <router-link :to="`/detail/${good.id}`"> <img :src="good.defaultImg" /></router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -108,35 +107,14 @@
               </li>
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+          <!-- 分页器 -->
+          <Pagination
+            :pageNo="searchParams.pageNo"
+            :pageSize="searchParams.pageSize"
+            :total="total"
+            :continues="5"
+            @getPageNo="getPageNo"
+          />
         </div>
       </div>
     </div>
@@ -144,8 +122,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import SearchSelector from "./SearchSelector/SearchSelector";
 export default {
   name: "Search",
@@ -162,8 +139,9 @@ export default {
         categoryName: "",
         // 关键字
         keyword: "",
-        // 排序
-        order: "",
+        // 1：综合，2：价格，asc：升序，desc：降序
+        // 排序，初始状态应该是综合降序
+        order: "1:asc",
         // 分页器参数，代表当前第几页，默认值1
         pageNo: 1,
         // 每一页多少数据，默认10
@@ -192,6 +170,27 @@ export default {
   computed: {
     // mapGetters里面的写法，传递数组，因为getters计算是没有划分模块的
     ...mapGetters(["goodsList"]),
+
+    // 排序判断
+    isOne() {
+      return this.searchParams.order.indexOf("1") != -1;
+    },
+    isTwo() {
+      return this.searchParams.order.indexOf("2") != -1;
+    },
+
+    // 图标向上向下判断
+    isAsc() {
+      return this.searchParams.order.indexOf("asc") != -1;
+    },
+    isDesc() {
+      return this.searchParams.order.indexOf("desc") != -1;
+    },
+
+    // 获取search模块展示的产品一共多少数据
+    ...mapState({
+      total: (state) => state.search.searchList.total,
+    }),
   },
   methods: {
     //把这次请求封装为一个函数，需要就调用。根据参数不同返回不同数据
@@ -254,11 +253,34 @@ export default {
       this.getData();
     },
     // 删除售卖属性面包屑
-    removeAttr(index){
+    removeAttr(index) {
       // 再次整理参数
       this.searchParams.props.splice(index, 1);
       this.getData();
-    }
+    },
+
+    // 排序更改
+    changeOrder(flag) {
+      let orginSort = this.searchParams.order.split(":")[1];
+      if (flag == 1) {
+        this.searchParams.order = `${flag}:${
+          orginSort == "desc" ? "asc" : "desc"
+        }`;
+      } else if (flag == 2) {
+        this.searchParams.order = `${flag}:${
+          orginSort == "desc" ? "asc" : "desc"
+        }`;
+      }
+      this.getData();
+    },
+
+    // 获取当前第几页
+    getPageNo(pageNo) {
+      // 整理参数
+      this.searchParams.pageNo = pageNo;
+      // 再次发送请求
+      this.getData();
+    },
   },
   watch: {
     // 数据监听，监听路由变化，重新发送请求

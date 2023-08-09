@@ -9,19 +9,22 @@ import mockRequest from "./mockAjax";
 export const reqCategoryList = () => {
     // 发送请求
     return request({ url: '/product/getBaseCategoryList', method: 'get' })
-}
+};
 
 // 获取banner数据
 export const reqGetBannerList = () => {
     return mockRequest({ url: '/banner', method: 'get' })
-}
+};
 
 // 获取floor数据
-export const reqGetFloorList = () => mockRequest.get("/floor")
+export const reqGetFloorList = () => mockRequest.get("/floor");
 
 
 // 获取搜索模块数据
 // 当前接口，给服务器传默认参数（至少是一个空对象）
 export const reqGetSearchInfo = (params) => {
     return request({ url: "/list", method: "post", data:params})
-}
+};
+
+// 获取详情接口
+export const reqGetGoodsInfo = (skuId)=>request({ url: `/item/${skuId}`,method:'get'});
