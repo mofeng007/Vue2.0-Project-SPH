@@ -31,3 +31,18 @@ export const reqGetGoodsInfo = (skuId) => request({ url: `/item/${skuId}`, metho
 
 // 将产品添加到购物车，更新购物车
 export const reqAddOrUpdateShopCart = (skuId, skuNum) => request({ url: `/cart/addToCart/${skuId}/${skuNum}`, method: 'post' });
+
+// 获取购物车列表
+export const reqCartList = () => request({ url: '/cart/cartList', method: 'get' });
+
+// 删除购物车商品
+export const reqDeleteCartById = (skuId) => request({ url: `/cart/deleteCart/${skuId}`, method: 'delete' });
+
+// 修改商品选中状态
+export const reqUpdateCheckedById = (skuId, isChecked) => request({ url: `cart/checkCart/${skuId}/${isChecked}`, method: 'get' });
+
+// 获取验证码
+export const reqGetCode = (phone) => request({ url: `/user/passport/sendCode/${phone}`, method: 'get' });
+
+// 注册
+export const reqUserRegister = (data) => request({ url: `/user/passport/register`, data, method: 'post', });

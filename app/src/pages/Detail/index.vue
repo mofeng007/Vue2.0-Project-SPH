@@ -426,10 +426,13 @@ export default {
           skuId: this.$route.params.skuId,
           skuNum: this.skuNum,
         });
+        // 一些比较复杂的数据，通过会话存储(不持久化，会话结束数据再消失)
+        sessionStorage.setItem("SKUINFO",JSON.stringify(this.skuInfo));
         // 进行路由跳转
         this.$router.push({
           name:'addCartSuccess',
-        });
+          query:{skuNum:this.skuNum},
+        },()=>{},(err)=>{});
       } catch (err) {
         // 失败
         alert(err.message);

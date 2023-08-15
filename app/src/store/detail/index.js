@@ -1,7 +1,12 @@
 import { reqGetGoodsInfo,reqAddOrUpdateShopCart } from '@/api';
+
+// 临时游客身份
+import {getUUID} from '@/utils/uuid_token';
 // detail模块的小仓库
 const state = {
-    goodInfo: {}
+    goodInfo: {},
+    // 游客的临时身份
+    uuid_token:getUUID(),
 };
 const actions = {
     // 获取产品详情
@@ -12,7 +17,7 @@ const actions = {
         }
     },
 
-    // 添加到购物车
+    // 1.添加到购物车，2.修改购物车物品数量
     async addOrUpdateShopCart({commit},{skuId,skuNum}){
         let result = await  reqAddOrUpdateShopCart(skuId,skuNum);
         // 加入购物车后(发请求)，前台将参数带给服务器，服务器写入数据成功，并没有返回其他数据，
@@ -22,9 +27,7 @@ const actions = {
         }else{
             // 加入失败
             return Promise.reject(new Error('请求失败'))
-            console.log("dasdasdasd",result);
         }
-        console.log("dasdasdasd",result);
     }
     
 };

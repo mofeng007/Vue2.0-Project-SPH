@@ -247,7 +247,7 @@ export default {
       let props = `${attr.attrId}:${attrValue}:${attr.attrName}`;
       // 数组去重
       if (this.searchParams.props.indexOf(props) == -1) {
-        this.searchParams.props.push(props);
+        this.searchParams.props.push(props,()=>{},(err)=>{});
       }
       // 再次发请求
       this.getData();

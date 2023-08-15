@@ -6,13 +6,15 @@ import nprogress from "nprogress";
 // 引入进度条样式
 import "nprogress/nprogress.css";
 
-// start:进度条开始，done:进度条结束
+import store from "@/store";
 
+// start:进度条开始，done:进度条结束
 
 const request = axios.create({
     //基础路径，requests发出的请求在端口号后面会跟改baseURl
     baseURL: "/api",
-    // timeout: 5000,
+    // 请求不超过5s
+    timeout: 5000,
 });
 
 // 请求拦截器.发请求之前
@@ -20,6 +22,10 @@ request.interceptors.request.use(
     //config内主要是对请求头Header配置
     //比如添加token
     config => {
+        if(store.state.detail.uuid_token){
+            // 请求头添加字段,(和后端商量一致，userTempId)
+            config.headers.userTempId = store.state.detail.uuid_token;
+        }
         // 进度条开始
         nprogress.start();
         return config;

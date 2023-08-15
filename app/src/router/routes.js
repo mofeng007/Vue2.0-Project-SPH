@@ -7,6 +7,7 @@ import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Detail from '@/pages/Detail';
 import AddCartSuccess from '@/pages/AddCartSuccess';
+import ShopCart from '@/pages/ShopCart';
 
 export default [
     {
@@ -53,11 +54,18 @@ export default [
         // 控制Footer组件的显示和隐藏
         meta: { show: true }
     },
+    // 购物车页面
+    {
+        name: "shopCart",
+        path: "/shopCart",
+        component: ShopCart,
+        // 控制Footer组件的显示和隐藏
+        meta: { show: true }
+    },
 
     // 重定向，在项目跑起来时，访问/，立马定位到首页
     {
         path: '*',
         redirect: "/home"
-
     }
 ]

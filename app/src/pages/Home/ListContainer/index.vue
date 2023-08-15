@@ -166,7 +166,8 @@ export default {
           width: 25%;
 
           .list-item {
-            background-image: url(./images/icons.png);
+            // 在css中使用@别名，前面加上 ~ 
+            background-image: url(~@/assets/images/icons.png);
             width: 61px;
             height: 40px;
             display: block;
