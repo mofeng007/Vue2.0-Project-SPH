@@ -23,8 +23,11 @@ export const reqGetFloorList = () => mockRequest.get("/floor");
 // 获取搜索模块数据
 // 当前接口，给服务器传默认参数（至少是一个空对象）
 export const reqGetSearchInfo = (params) => {
-    return request({ url: "/list", method: "post", data:params})
+    return request({ url: "/list", method: "post", data: params })
 };
 
 // 获取详情接口
-export const reqGetGoodsInfo = (skuId)=>request({ url: `/item/${skuId}`,method:'get'});
+export const reqGetGoodsInfo = (skuId) => request({ url: `/item/${skuId}`, method: 'get' });
+
+// 将产品添加到购物车，更新购物车
+export const reqAddOrUpdateShopCart = (skuId, skuNum) => request({ url: `/cart/addToCart/${skuId}/${skuNum}`, method: 'post' });

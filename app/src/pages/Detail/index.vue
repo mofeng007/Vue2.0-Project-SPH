@@ -103,12 +103,23 @@
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt" />
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <input
+                  autocomplete="off"
+                  class="itxt"
+                  v-model="skuNum"
+                  @change="changeSkuNum"
+                />
+                <a href="javascript:" class="plus" @click="skuNum++">+</a>
+                <a
+                  href="javascript:"
+                  class="mins"
+                  @click="skuNum > 1 ? skuNum-- : (skuNum = 1)"
+                  >-</a
+                >
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <!-- 以前路由跳转 A路由到B路由，这里加入购物车，进行路由跳转之前，发请求 -->
+                <a @click="addShopCar">加入购物车</a>
               </div>
             </div>
           </div>
@@ -353,6 +364,12 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "Detail",
+  data() {
+    return {
+      // 加入购物车个数
+      skuNum: 1,
+    };
+  },
   components: {
     ImageList,
     Zoom,
@@ -377,6 +394,46 @@ export default {
       });
       // 设置当前选中的属性值高亮
       saleAttrValue.isChecked = 1;
+    },
+
+    // 表单元素修改购买商品个数
+    changeSkuNum(event) {
+      // 正则表达式法：
+      // const pattern = /^[1-9]\d*$/;
+      // if(pattern.test(event.target.value)){
+      //   this.skuNum = event.target.value;
+      // }else{
+      //   alert("输入不合法！！！");
+      //   this.skuNum = 1;
+      // }
+
+      // 第二种方法：
+      let value = event.target.value * 1;
+      // 如果用户输入进来的非法，出现NaN或者小于1
+      if (isNaN(value) || value < 1) {
+        this.skuNum = 1;
+      } else {
+        // 正常大于一，不能是小数
+        this.skuNum = parseInt(value);
+      }
+    },
+    
+    // 加入购物车
+    async addShopCar() {
+      try {
+        // 派发action
+        let result = await this.$store.dispatch("addOrUpdateShopCart", {
+          skuId: this.$route.params.skuId,
+          skuNum: this.skuNum,
+        });
+        // 进行路由跳转
+        this.$router.push({
+          name:'addCartSuccess',
+        });
+      } catch (err) {
+        // 失败
+        alert(err.message);
+      }
     },
   },
 };

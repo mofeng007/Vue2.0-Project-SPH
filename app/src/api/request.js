@@ -12,7 +12,7 @@ import "nprogress/nprogress.css";
 const request = axios.create({
     //基础路径，requests发出的请求在端口号后面会跟改baseURl
     baseURL: "/api",
-    timeout: 5000,
+    // timeout: 5000,
 });
 
 // 请求拦截器.发请求之前

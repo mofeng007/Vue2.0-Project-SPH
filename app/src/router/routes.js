@@ -6,6 +6,7 @@ import Search from '@/pages/Search';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Detail from '@/pages/Detail';
+import AddCartSuccess from '@/pages/AddCartSuccess';
 
 export default [
     {
@@ -42,6 +43,14 @@ export default [
         name: "detail",
         path: "/detail/:skuId",
         component: Detail,
+        meta: { show: true }
+    },
+    // 加入购物车成功
+    {
+        name: "addCartSuccess",
+        path: "/addCartSuccess",
+        component: AddCartSuccess,
+        // 控制Footer组件的显示和隐藏
         meta: { show: true }
     },
 
