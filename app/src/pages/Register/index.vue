@@ -109,7 +109,11 @@ export default {
             password,
             password1,
           }));
-          this.$router.push({name:'login'},()=>{},(err)=>{});
+        this.$router.push(
+          { name: "login" },
+          () => {},
+          (err) => {}
+        );
       } catch (err) {
         alert(err.message);
       }

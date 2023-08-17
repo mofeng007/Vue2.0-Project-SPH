@@ -46,3 +46,15 @@ export const reqGetCode = (phone) => request({ url: `/user/passport/sendCode/${p
 
 // 注册
 export const reqUserRegister = (data) => request({ url: `/user/passport/register`, data, method: 'post', });
+
+// 登录
+export const reqUserLogin = (data) => request({ url: `/user/passport/login`, data, method: 'post' });
+
+// 获取用户信息，带token
+export const reqUserInfo = () => request({ url: `/user/passport/auth/getUserInfo`, method: 'get' });
+
+// 退出登录
+export const reqLogout = () => request({ url: `/user/passport/logout`, method: 'get' });
+
+
+
