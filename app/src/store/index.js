@@ -8,7 +8,8 @@ import home from './home';
 import search from './search';
 import detail from './detail';
 import shopCart from './shopCart';
-import user from './user'
+import user from './user';
+import trade from './trade';
 
 //对外暴露store的一个实例
 export default new Vuex.Store({
@@ -18,7 +19,8 @@ export default new Vuex.Store({
         search,
         detail,
         shopCart,
-        user
+        user,
+        trade,
     }
 
 })

@@ -90,7 +90,8 @@
           <i class="summoney">{{ totalPrice }}</i>
         </div>
         <div class="sumbtn">
-          <a class="sum-btn" href="###" target="_blank">结算</a>
+          
+          <router-link class="sum-btn" to="trade">结算</router-link>
         </div>
       </div>
     </div>
@@ -196,7 +197,10 @@ export default {
     totalPrice() {
       let sum = 0;
       this.cartInfoList.forEach((item) => {
-        sum += item.skuNum * item.skuPrice;
+        // 被选中的才加入总价
+        if(item.isChecked){
+          sum += item.skuNum * item.skuPrice;
+        }
       });
       return sum;
     },

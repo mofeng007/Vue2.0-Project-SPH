@@ -24,7 +24,7 @@ let router = new VueRouter({
 // 全局守卫，前置守卫
 router.beforeEach(async (to, from, next) => {
 
-    next();
+    // next();
     let token = store.state.user.token;
     // 用户信息
     let name = store.state.user.userInfo.name;

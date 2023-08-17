@@ -25,14 +25,11 @@ import store from '@/store';
 import 'swiper/swiper-bundle.min.css';
 
 
-
-
 // 引入mock
 import "@/mock/mockServe";
 
-// 测试
-// import {reqCategoryList} from '@/api'
-// console.log("xxxxxx",reqCategoryList());
+// 统一接收api里面的全部请求函数
+import * as API from "@/api";
 
 
 // 关闭vue的生产提示
@@ -43,6 +40,7 @@ new Vue({
   // 配置全局事件总线
   beforeCreate() {
     Vue.prototype.$bus = this;
+    Vue.prototype.$API = API;
   },
   router,
   store

@@ -8,6 +8,8 @@ import Register from '@/pages/Register';
 import Detail from '@/pages/Detail';
 import AddCartSuccess from '@/pages/AddCartSuccess';
 import ShopCart from '@/pages/ShopCart';
+import Trade from '@/pages/Trade';
+import Pay from '@/pages/Pay';
 
 export default [
     {
@@ -59,6 +61,22 @@ export default [
         name: "shopCart",
         path: "/shopCart",
         component: ShopCart,
+        // 控制Footer组件的显示和隐藏
+        meta: { show: true }
+    },
+    // 结算页面
+    {
+        name: "trade",
+        path: "/trade",
+        component: Trade,
+        // 控制Footer组件的显示和隐藏
+        meta: { show: true }
+    },
+    // 支付页面
+    {
+        name: "pay",
+        path: "/pay",
+        component: Pay,
         // 控制Footer组件的显示和隐藏
         meta: { show: true }
     },
