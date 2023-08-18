@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h1 v-myPlugins="msg" style="color:red"></h1>
     <Header />
     <!-- 路由组件出口的地方 -->
     <router-view></router-view>
@@ -14,6 +15,11 @@ import Footer from "./components/Footer";
 
 export default {
   name: "App",
+  data() {
+    return {
+      msg:'abc'
+    }
+  },
   components: {
     Header,
     Footer,

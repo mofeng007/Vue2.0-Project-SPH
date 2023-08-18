@@ -52,8 +52,14 @@ router.beforeEach(async (to, from, next) => {
             }
         }
     } else {
-        // 未登录,暂时不做处理
-        next();
+        // 未登录,不能去支付相关，个人中心等
+        let toPath = to.path;
+        if(toPath.indexOf('/trade')!=-1 || toPath.indexOf('/pay')!=-1 || toPath.indexOf('/center')!=-1){
+            // 把未登录时想要去的地址信息存储于路由中，此时登录后会直接跳到相应页面
+            next('/login?redirect='+toPath);
+        }else{
+            next();
+        }
     }
 });
 

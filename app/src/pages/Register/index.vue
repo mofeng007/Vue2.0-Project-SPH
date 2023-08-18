@@ -5,44 +5,71 @@
       <h3>
         注册新用户
         <span class="go"
-          >我有账号，去 <a href="login.html" target="_blank">登陆</a>
+          >我有账号，去 <router-link to="login">登陆</router-link>
         </span>
       </h3>
       <div class="content">
         <label>手机号:</label>
-        <input type="text" placeholder="请输入你的手机号" v-model="phone" />
-        <!-- <span class="error-msg">错误提示信息</span> -->
+        <input
+          placeholder="请输入你的手机号"
+          v-model="phone"
+          name="phone"
+          v-validate="{ required: true, regex: /^1\d{10}$/ }"
+          :class="{ invalid: errors.has('phone') }"
+        />
+        <span class="error-msg">{{ errors.first("phone") }}</span>
       </div>
       <div class="content">
         <label>验证码:</label>
-        <input v-model="code" type="text" placeholder="请输入验证码" />
+        <input
+          placeholder="请输入你的验证码"
+          v-model="code"
+          name="code"
+          v-validate="{ required: true, regex: /^\d{6}$/ }"
+          :class="{ invalid: errors.has('code') }"
+        />
         <button @click="getCode" style="width: 100px; height: 38px">
           获取验证码
         </button>
-        <!-- <span class="error-msg">错误提示信息</span> -->
+        <span class="error-msg">{{ errors.first("code") }}</span>
       </div>
       <div class="content">
         <label>登录密码:</label>
         <input
-          v-model="password"
           type="password"
-          placeholder="请输入你的登录密码"
+          placeholder="请输入你的密码"
+          v-model="password"
+          name="password"
+          v-validate="{
+            required: true,
+            regex: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,15}$/,
+          }"
+          :class="{ invalid: errors.has('password') }"
         />
-        <!-- <span class="error-msg">错误提示信息</span> -->
+        <span class="error-msg">{{ errors.first("password") }}</span>
       </div>
       <div class="content">
         <label>确认密码:</label>
         <input
-          v-model="password1"
           type="password"
-          placeholder="请输入确认密码"
+          placeholder="请确认你的密码"
+          v-model="password1"
+          name="password1"
+          v-validate="{ required: true, is: password }"
+          :class="{ invalid: errors.has('password1') }"
         />
-        <!-- <span class="error-msg">错误提示信息</span> -->
+        <span class="error-msg">{{ errors.first("password1") }}</span>
       </div>
       <div class="controls">
-        <input :checked="isAgree" name="m1" type="checkbox" />
+        <input
+          type="checkbox"
+          v-model="isAgree"
+          name="isAgree"
+          v-validate="{ required: true, tongyi: true }"
+          :class="{ invalid: errors.has('isAgree') }"
+        />
         <span>同意协议并注册《尚品汇用户协议》</span>
-        <!-- <span class="error-msg">错误提示信息</span> -->
+        <span class="error-msg">{{ errors.first("isAgree") }}</span>
       </div>
       <div class="btn">
         <button @click="userRegister">完成注册</button>
@@ -81,7 +108,7 @@ export default {
       // 确认密码
       password1: "",
       // 是否同意
-      isAgree: false,
+      isAgree: true,
     };
   },
   methods: {
@@ -98,24 +125,27 @@ export default {
 
     // 注册
     async userRegister() {
-      try {
-        const { phone, code, password, password1 } = this;
-        phone &&
-          code &&
-          password == password1 &&
-          (await this.$store.dispatch("userRegister", {
+      //全部表单验证成功
+      const success = await this.$validator.validateAll();
+      if (success) {
+        try {
+          const { phone, code, password, password1 } = this;
+          await this.$store.dispatch("userRegister", {
             phone,
             code,
             password,
             password1,
-          }));
-        this.$router.push(
-          { name: "login" },
-          () => {},
-          (err) => {}
-        );
-      } catch (err) {
-        alert(err.message);
+          });
+          this.$router.push(
+            { name: "login" },
+            () => {},
+            (err) => {}
+          );
+        } catch (err) {
+          alert(err.message);
+        }
+      }else{
+        alert("请填写完整信息");
       }
     },
   },
